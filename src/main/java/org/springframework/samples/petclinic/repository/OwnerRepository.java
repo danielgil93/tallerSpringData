@@ -27,6 +27,9 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
     
     /*Taller 4*/
     List<Owner> findByFirstNameContainsOrLastNameContains(String firstName, String lastName);
+    /*Otra forma:
+    @Query("select o from Owner o where o.firstName like :q% or o.lastName like :q%")
+    List<Owner> searchOwner(@param("q") String query);
+    */
     List<Owner> findByOrderByLastNameAsc();
 }
- 
