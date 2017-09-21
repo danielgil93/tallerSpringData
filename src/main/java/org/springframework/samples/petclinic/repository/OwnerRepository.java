@@ -24,7 +24,6 @@ import org.springframework.samples.petclinic.model.Owner;
 public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 
     Owner findById(Integer id);
-    
     /*Taller 4*/
     List<Owner> findByFirstNameContainsOrLastNameContains(String firstName, String lastName);
     /*Otra forma:
@@ -32,4 +31,5 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
     List<Owner> searchOwner(@param("q") String query);
     */
     List<Owner> findByOrderByLastNameAsc();
+    
 }

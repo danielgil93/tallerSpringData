@@ -16,6 +16,10 @@
 
 package org.springframework.samples.petclinic;
 
+import java.util.Date;
+import java.util.Set;
+
+import org.hibernate.mapping.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -23,12 +27,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.OwnerRepository;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.SpecialityRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
+import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PetService;
 
-import antlr.collections.List;
 
 /**
  * PetClinic Spring Boot Application.
@@ -105,24 +111,75 @@ public class PetClinicApplication {
 		};
 	}
     
+// Sin servicio
+//  @Bean
+//	public CommandLineRunner demoOwnerRepository(OwnerRepository ownerRepository) {
+//		return (args) -> {
+//			log.info("*****************************************************");
+//		    log.info("BOOTCAMP - Spring y Spring Data - OwnerRepository");
+//		    log.info("*****************************************************");
+//		    
+//		    /*Taller 4*/
+//		    log.info("Filtramos por nombre o apellido contains");
+//		    for(Owner o: ownerRepository.findByFirstNameContainsOrLastNameContains("t", "x")){
+//		    	log.info("Owner: "+o);
+//		    }
+//		    
+//		    log.info("Filtramos por apellido ordenado");
+//		    for(Owner o: ownerRepository.findByOrderByLastNameAsc()){ 
+//		    	log.info("Owner: "+o);
+//		    }
+//		   
+//		};
+//    }
+
+    //Con el servicio
     @Bean
-	public CommandLineRunner demoOwnerRepository(OwnerRepository ownerRepository) {
+	public CommandLineRunner demoOwnerRepository(OwnerService ownerService) {
 		return (args) -> {
 			log.info("*****************************************************");
-		    log.info("BOOTCAMP - Spring y Spring Data - OwnerRepository");
+		    log.info("BOOTCAMP - Spring y Spring Data - OwnerService");
 		    log.info("*****************************************************");
 		    
 		    /*Taller 4*/
 		    log.info("Filtramos por nombre o apellido contains");
-		    for(Owner o: ownerRepository.findByFirstNameContainsOrLastNameContains("t", "x")){
+		    for(Owner o: ownerService.findByFirstNameContainsOrLastNameContains("t", "x")){
 		    	log.info("Owner: "+o);
 		    }
 		    
 		    log.info("Filtramos por apellido ordenado");
-		    for(Owner o: ownerRepository.findByOrderByLastNameAsc()){ 
+		    for(Owner o: ownerService.findByOrderByLastNameAsc()){ 
 		    	log.info("Owner: "+o);
 		    }
 		   
+		};
+    }
+
+	@Bean
+	public CommandLineRunner demoPetRepository(PetService petService) {
+		return (args) -> {
+			log.info("*****************************************************");
+		    log.info("BOOTCAMP - Spring y Spring Data - PetService");
+		    log.info("*****************************************************");
+		    
+		    log.info("Filtramos por fecha");
+		    Date d1 = new Date();
+		    Date d2 = new Date();
+		    for(Pet p: petService.findByBirthDateBetweenOrderByBirthDateAsc(new Date(2010, 1, 1), new Date(2010, 12, 31))){
+		    	log.info("Pet: "+p);
+		    }
+		    
+		    Set<Visit> visits;
+		    Visit v1=new Visit();
+		    Visit v2=new Visit();
+		    Visit v3=new Visit();
+		    Visit v4=new Visit();
+		    Visit v5=new Visit();
+		    v1.setDescription("1");
+		    v1.setDescription("2");
+		    v1.setDescription("3");
+		    v1.setDescription("4");
+		    v1.setDescription("5");
 		};
     }
     
