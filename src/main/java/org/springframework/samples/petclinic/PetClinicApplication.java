@@ -22,8 +22,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.SpecialityRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
+
+import antlr.collections.List;
 
 /**
  * PetClinic Spring Boot Application.
@@ -48,7 +53,77 @@ public class PetClinicApplication {
 			log.info("*****************************************************");
 			
 			//TODO Añade aquí tu código
+			
+			/*Taller 1*/
+			log.info("Creamos objeto Vet");
+			Vet vet1 = new Vet();
+			Vet vetalm = new Vet();
+			vet1.setFirstName("Daniel");
+			vet1.setLastName("Gil");
+			
+			log.info("Guardamos en la BBDD");
+			vet1 = vetRepository.save(vet1);
+			
+			log.info("Comprobamos que se ha guardado correctamente");
+			vetalm = vetRepository.findOne(vet1.getId());
+			log.info(vet1.toString());
+			
+			log.info("Añadimos speciality");
+			vet1.addSpecialty(specialityRepository.findOne(1));
+			vet1 = vetRepository.save(vet1);
+			
+			log.info("Comprobamos que se ha guardado correctamente la speciality");
+			log.info(vet1.toString());
+			
+			log.info("Listamos los veterinarios");
+			for(Vet v: vetRepository.findAll()){
+		    	log.info("Vet: "+v);
+		    }
+			
+			/*Taller 2*/
+			log.info("Filtramos por lastName=Gil");
+		    for(Vet v: vetRepository.findByLastName("Gil")){
+		    	log.info("Vet: "+v);
+		    }
+		    
+		    log.info("Filtramos por lastName=Gil y firstName=Daniel");
+		    for(Vet v: vetRepository.findByFirstNameAndLastName("Daniel", "Gil")){
+		    	log.info("Vet: "+v);
+		    }
+		    
+		    log.info("Filtramos por firstName o lastname");
+		    for(Vet v: vetRepository.findByFirstNameOrLastName("Daniel", "Daniel")){
+		    	log.info("Vet: "+v);
+		    }
+		    
+		    /*Taller 3*/
+		    log.info("Filtramos por especialidad");
+		    for(Vet v: vetRepository.findBySpecialityName("radiology")){
+		    	log.info("Vet: "+v);
+		    }
+		    
 		};
 	}
+    
+    @Bean
+	public CommandLineRunner demoOwnerRepository(OwnerRepository ownerRepository) {
+		return (args) -> {
+			log.info("*****************************************************");
+		    log.info("BOOTCAMP - Spring y Spring Data - OwnerRepository");
+		    log.info("*****************************************************");
+		    
+		    /*Taller 4*/
+		    log.info("Filtramos por nombre o apellido contains");
+		    for(Owner o: ownerRepository.findByFirstNameContainsOrLastNameContains("t", "x")){
+		    	log.info("Owner: "+o);
+		    }
+		    
+		    log.info("Filtramos por apellido ordenado");
+		    for(Owner o: ownerRepository.findByOrderByLastNameAsc()){ 
+		    	log.info("Owner: "+o);
+		    }
+		   
+		};
+    }
     
 }
